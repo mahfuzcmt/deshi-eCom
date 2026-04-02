@@ -18,42 +18,47 @@ class TOT_SMS {
             return;
         }
 
-        // Hook into every possible order creation event
-        add_action('woocommerce_checkout_order_processed', array(__CLASS__, 'on_thankyou'), 10, 1);
-        add_action('woocommerce_thankyou', array(__CLASS__, 'on_thankyou'), 10, 1);
+        // COD orders: send SMS immediately on order creation
+        add_action('woocommerce_checkout_order_processed', array(__CLASS__, 'on_order_placed'), 10, 1);
+
+        // Online payment orders: send SMS only after payment is confirmed
         add_action('woocommerce_order_status_changed', array(__CLASS__, 'on_status_change'), 10, 3);
-        add_action('woocommerce_new_order', array(__CLASS__, 'on_thankyou'), 99, 1);
-        add_action('woocommerce_checkout_order_created', array(__CLASS__, 'on_order_created'), 99, 1);
 
         // Admin: test SMS button
         add_action('wp_ajax_tot_test_sms', array(__CLASS__, 'ajax_test_sms'));
     }
 
     /**
-     * Handle order ID based hooks.
+     * Handle order placed — only send SMS for COD orders immediately.
      */
-    public static function on_thankyou($order_id) {
+    public static function on_order_placed($order_id) {
         $order = wc_get_order($order_id);
-        if ($order) {
+        if (!$order) {
+            return;
+        }
+
+        // Only send immediately for COD; online payments wait for status change
+        if ($order->get_payment_method() === 'cod') {
             self::maybe_send_sms($order);
         }
     }
 
     /**
-     * Handle order object based hook (woocommerce_checkout_order_created).
-     */
-    public static function on_order_created($order) {
-        if ($order) {
-            self::maybe_send_sms($order);
-        }
-    }
-
-    /**
-     * Handle status change — send on first status transition.
+     * Handle status change — send SMS when online payment order becomes processing/completed.
      */
     public static function on_status_change($order_id, $old_status, $new_status) {
         $order = wc_get_order($order_id);
-        if ($order) {
+        if (!$order) {
+            return;
+        }
+
+        // Skip COD orders here — they were already handled on placement
+        if ($order->get_payment_method() === 'cod') {
+            return;
+        }
+
+        // Send SMS when online payment order reaches processing or completed
+        if (in_array($new_status, array('processing', 'completed'), true)) {
             self::maybe_send_sms($order);
         }
     }

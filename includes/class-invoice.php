@@ -47,7 +47,7 @@ class TOT_Invoice {
         echo '<a href="' . esc_url($invoice_url . '&action=print') . '" class="button tot-invoice-print" target="_blank">';
         echo esc_html__('Print Invoice', 'deshi-ecom');
         echo '</a> ';
-        echo '<a href="' . esc_url($invoice_url . '&action=download') . '" class="button tot-invoice-download">';
+        echo '<a href="' . esc_url($invoice_url . '&action=download') . '" class="button tot-invoice-download" target="_blank">';
         echo esc_html__('Download Invoice', 'deshi-ecom');
         echo '</a>';
         echo '</div>';
@@ -78,19 +78,14 @@ class TOT_Invoice {
 
         $action = isset($_GET['action']) ? sanitize_text_field($_GET['action']) : 'print';
 
-        if ($action === 'download') {
-            header('Content-Type: text/html; charset=UTF-8');
-            header('Content-Disposition: attachment; filename="invoice-' . $order_id . '.html"');
-        }
-
-        self::render_invoice($order);
+        self::render_invoice($order, $action);
         exit;
     }
 
     /**
      * Render printable invoice HTML.
      */
-    private static function render_invoice($order) {
+    private static function render_invoice($order, $action = 'print') {
         $order_id      = $order->get_id();
         $order_date    = $order->get_date_created()->date_i18n('F j, Y');
         $name          = $order->get_billing_first_name() . ' ' . $order->get_billing_last_name();
@@ -100,8 +95,20 @@ class TOT_Invoice {
         $city          = $order->get_billing_city();
         $delivery_area = $order->get_meta('delivery_area');
         $area_label    = $delivery_area === 'inside' ? 'Inside Dhaka' : ($delivery_area === 'outside' ? 'Outside Dhaka' : '');
-        $payment       = $order->get_payment_method_title();
-        $support_phone = get_option('tot_support_phone', '01875906277');
+        $payment        = $order->get_payment_method_title();
+        $payment_method = $order->get_payment_method();
+        $transaction_id = $order->get_transaction_id();
+        // Fallback: fetch from ShurjoPay table if WooCommerce doesn't have it
+        if (!$transaction_id && $payment_method === 'wc_shurjopay') {
+            global $wpdb;
+            $transaction_id = $wpdb->get_var($wpdb->prepare(
+                "SELECT bank_trx_id FROM {$wpdb->prefix}sp_orders WHERE order_id = %s AND bank_trx_id IS NOT NULL AND bank_trx_id != '' LIMIT 1",
+                $order_id
+            ));
+        }
+        $date_paid      = $order->get_date_paid();
+        $is_paid        = $order->is_paid();
+        $support_phone  = get_option('tot_support_phone', '01875906277');
         ?>
         <!DOCTYPE html>
         <html>
@@ -134,6 +141,7 @@ class TOT_Invoice {
         <body>
             <div class="no-print" style="text-align:center;margin-bottom:20px;">
                 <button onclick="window.print()" style="background:#3bb77e;color:#fff;border:none;padding:10px 30px;border-radius:6px;cursor:pointer;font-size:16px;">Print Invoice</button>
+                <button onclick="totDownloadPdf()" style="background:#555;color:#fff;border:none;padding:10px 30px;border-radius:6px;cursor:pointer;font-size:16px;margin-left:10px;">Download PDF</button>
             </div>
 
             <div class="invoice-header">
@@ -159,7 +167,7 @@ class TOT_Invoice {
                 </div>
             </div>
 
-            <div class="details-grid">
+            <div class="details-grid" style="grid-template-columns:1fr 1fr 1fr;">
                 <div class="detail-box">
                     <h3>Customer Details</h3>
                     <p><strong><?php echo esc_html($name); ?></strong></p>
@@ -171,7 +179,21 @@ class TOT_Invoice {
                     <p><?php echo esc_html($address); ?></p>
                     <p><?php echo esc_html($city); ?></p>
                     <?php if ($area_label) : ?><p>Area: <?php echo esc_html($area_label); ?></p><?php endif; ?>
-                    <p>Payment: <?php echo esc_html(wp_strip_all_tags($payment)); ?></p>
+                </div>
+                <div class="detail-box">
+                    <h3>Payment Details</h3>
+                    <p>Method: <?php echo esc_html(wp_strip_all_tags($payment)); ?></p>
+                    <p>Status: <?php
+                        if ($payment_method === 'cod') {
+                            echo '<span style="color:#e67e22;font-weight:600;">Pay on Delivery</span>';
+                        } elseif ($is_paid) {
+                            echo '<span style="color:#2e7d32;font-weight:600;">Paid</span>';
+                        } else {
+                            echo '<span style="color:#e53935;font-weight:600;">Unpaid</span>';
+                        }
+                    ?></p>
+                    <?php if ($transaction_id) : ?><p>Transaction ID: <?php echo esc_html($transaction_id); ?></p><?php endif; ?>
+                    <?php if ($date_paid) : ?><p>Paid on: <?php echo esc_html($date_paid->date_i18n('F j, Y g:i A')); ?></p><?php endif; ?>
                 </div>
             </div>
 
@@ -234,6 +256,24 @@ class TOT_Invoice {
                 <p>Support: +880 <?php echo esc_html($support_phone); ?></p>
                 <p>Thank you for your order!</p>
             </div>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
+            <script>
+                function totDownloadPdf() {
+                    var el = document.body.cloneNode(true);
+                    // Remove no-print elements from the clone
+                    el.querySelectorAll('.no-print').forEach(function(n) { n.remove(); });
+                    html2pdf().set({
+                        margin:       10,
+                        filename:     'invoice-<?php echo esc_js($order_id); ?>.pdf',
+                        image:        { type: 'jpeg', quality: 0.98 },
+                        html2canvas:  { scale: 2, useCORS: true },
+                        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+                    }).from(el).save();
+                }
+                <?php if ($action === 'download') : ?>
+                window.addEventListener('DOMContentLoaded', function() { totDownloadPdf(); });
+                <?php endif; ?>
+            </script>
         </body>
         </html>
         <?php

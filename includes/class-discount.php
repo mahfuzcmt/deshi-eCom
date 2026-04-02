@@ -26,7 +26,7 @@ class TOT_Discount {
         // Add discount label to payment methods
         add_filter('woocommerce_gateway_title', array(__CLASS__, 'add_discount_label'), 10, 2);
 
-        // JS to update checkout on payment method change
+        // JS to update checkout on payment method change + button text
         add_action('wp_footer', array(__CLASS__, 'payment_method_script'));
     }
 
@@ -101,9 +101,25 @@ class TOT_Discount {
         ?>
         <script>
         jQuery(function($){
+            function totUpdateButtonText() {
+                var method = $('input[name="payment_method"]:checked').val();
+                var $btn = $('#place_order');
+                if (method && method !== 'cod') {
+                    $btn.val('<?php echo esc_js(__('Pay Now', 'deshi-ecom')); ?>');
+                    $btn.text('<?php echo esc_js(__('Pay Now', 'deshi-ecom')); ?>');
+                } else {
+                    $btn.val('<?php echo esc_js(__('Place Order', 'deshi-ecom')); ?>');
+                    $btn.text('<?php echo esc_js(__('Place Order', 'deshi-ecom')); ?>');
+                }
+            }
             $('form.checkout').on('change', 'input[name="payment_method"]', function(){
                 $('body').trigger('update_checkout');
+                totUpdateButtonText();
             });
+            $(document.body).on('updated_checkout', function(){
+                totUpdateButtonText();
+            });
+            totUpdateButtonText();
         });
         </script>
         <?php

@@ -31,6 +31,9 @@ class TOT_Frontend {
         if (get_option('tot_search_animation_enabled', 1)) {
             add_action('wp_footer', array(__CLASS__, 'search_animation_init'));
         }
+
+        // "Select the variant" label on variable products
+        add_action('woocommerce_before_variations_form', array(__CLASS__, 'variant_select_label'));
     }
 
     /**
@@ -105,6 +108,16 @@ class TOT_Frontend {
         }
 
         return $approved;
+    }
+
+    /**
+     * Show "Select the variant" label above variation swatches.
+     */
+    public static function variant_select_label() {
+        global $product;
+        if ($product && $product->is_type('variable')) {
+            echo '<p style="margin:0 0 5px;font-size:14px;font-weight:600;color:#555;">' . esc_html__('Select the variant', 'deshi-ecom') . '</p>';
+        }
     }
 
     /**

@@ -366,6 +366,26 @@ input[name="s"]:focus {
 }
 
 /* ============================
+   CHECKOUT LOGIN FORM ALIGNMENT
+   ============================ */
+.woocommerce-form-login {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 15px;
+}
+
+.woocommerce-form-login .form-row-first,
+.woocommerce-form-login .form-row-last {
+    flex: 1;
+    min-width: 45%;
+}
+
+.woocommerce-form-login .form-row-wide,
+.woocommerce-form-login p.form-row:not(.form-row-first):not(.form-row-last) {
+    flex: 0 0 100%;
+}
+
+/* ============================
    CHECKOUT SIMPLIFICATION
    ============================ */
 .woocommerce-checkout .woocommerce-billing-fields__field-wrapper {

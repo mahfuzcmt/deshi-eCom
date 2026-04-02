@@ -138,6 +138,40 @@ class TOT_Emails {
                         <td style="font-weight:bold;vertical-align:top;">Payment Method:</td>
                         <td><?php echo esc_html( $order->get_payment_method_title() ); ?></td>
                     </tr>
+                    <tr>
+                        <td style="font-weight:bold;vertical-align:top;">Payment Status:</td>
+                        <td><?php
+                            if ($order->get_payment_method() === 'cod') {
+                                echo '<span style="color:#e67e22;font-weight:600;">Pay on Delivery</span>';
+                            } elseif ($order->is_paid()) {
+                                echo '<span style="color:#2e7d32;font-weight:600;">Paid</span>';
+                            } else {
+                                echo '<span style="color:#e53935;font-weight:600;">Unpaid</span>';
+                            }
+                        ?></td>
+                    </tr>
+                    <?php
+                        $txn_id = $order->get_transaction_id();
+                        if (!$txn_id && $order->get_payment_method() === 'wc_shurjopay') {
+                            global $wpdb;
+                            $txn_id = $wpdb->get_var($wpdb->prepare(
+                                "SELECT bank_trx_id FROM {$wpdb->prefix}sp_orders WHERE order_id = %s AND bank_trx_id IS NOT NULL AND bank_trx_id != '' LIMIT 1",
+                                $order->get_id()
+                            ));
+                        }
+                    ?>
+                    <?php if ( $txn_id ) : ?>
+                    <tr style="background-color:#f9f9f9;">
+                        <td style="font-weight:bold;vertical-align:top;">Transaction ID:</td>
+                        <td><?php echo esc_html( $txn_id ); ?></td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php if ( $order->get_date_paid() ) : ?>
+                    <tr>
+                        <td style="font-weight:bold;vertical-align:top;">Paid on:</td>
+                        <td><?php echo esc_html( $order->get_date_paid()->date_i18n('F j, Y g:i A') ); ?></td>
+                    </tr>
+                    <?php endif; ?>
                 </table>
 
                 <h3 style="color:#3bb77e;margin-top:20px;">What happens next?</h3>

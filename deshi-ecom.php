@@ -117,6 +117,20 @@ function tot_enqueue_assets() {
 add_action('wp_enqueue_scripts', 'tot_enqueue_assets');
 
 /**
+ * Override strikethrough price color (must come after theme inline styles).
+ */
+function tot_price_del_override() {
+    echo '<style>
+    .woocommerce .price del,
+    .woocommerce .price del .amount,
+    .woocommerce .price del .woocommerce-Price-amount {
+        color: #999 !important;
+    }
+    </style>' . "\n";
+}
+add_action('wp_head', 'tot_price_del_override', 999);
+
+/**
  * Plugin activation.
  */
 function tot_activate() {
