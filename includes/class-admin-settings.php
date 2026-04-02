@@ -40,6 +40,7 @@ class TOT_Admin_Settings {
         register_setting('tot_settings', 'tot_sms_bearer_token', array('type' => 'string', 'sanitize_callback' => 'sanitize_text_field'));
         register_setting('tot_settings', 'tot_sms_enabled', array('type' => 'boolean', 'sanitize_callback' => 'rest_sanitize_boolean'));
         register_setting('tot_settings', 'tot_sms_skip_if_email', array('type' => 'boolean', 'sanitize_callback' => 'rest_sanitize_boolean'));
+        register_setting('tot_settings', 'tot_sms_order_template', array('type' => 'string', 'sanitize_callback' => 'sanitize_textarea_field'));
 
         // WhatsApp
         register_setting('tot_settings', 'tot_whatsapp_url', array('type' => 'string', 'sanitize_callback' => 'esc_url_raw'));
@@ -143,6 +144,13 @@ class TOT_Admin_Settings {
                             <td>
                                 <textarea name="tot_sms_bearer_token" rows="3" class="large-text code"><?php echo esc_textarea(get_option('tot_sms_bearer_token', '')); ?></textarea>
                                 <p class="description">JWT Bearer Token from Falcon Communication Ltd. API: <code>sms.falconcommunicationltd.com</code></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Order Confirmation SMS Text</th>
+                            <td>
+                                <textarea name="tot_sms_order_template" rows="3" class="large-text"><?php echo esc_textarea(get_option('tot_sms_order_template', 'The Thai Origins: Hi {name}! Order #{order_id} confirmed. Total: Tk {total}. We will call you for verification soon. Thanks! {support_phone}')); ?></textarea>
+                                <p class="description">Available placeholders: <code>{name}</code> <code>{order_id}</code> <code>{total}</code> <code>{support_phone}</code></p>
                             </td>
                         </tr>
                         <tr>

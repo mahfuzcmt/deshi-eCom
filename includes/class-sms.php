@@ -108,12 +108,11 @@ class TOT_SMS {
         $phone = self::format_bd_phone($phone);
         $support_phone = get_option('tot_support_phone', '01875906277');
 
-        $message = sprintf(
-            'The Thai Origins: Hi %s! Order #%s confirmed. Total: Tk %s. We will call you for verification soon. Thanks! %s',
-            $name,
-            $order->get_id(),
-            $total,
-            $support_phone
+        $template = get_option('tot_sms_order_template', 'The Thai Origins: Hi {name}! Order #{order_id} confirmed. Total: Tk {total}. We will call you for verification soon. Thanks! {support_phone}');
+        $message = str_replace(
+            array('{name}', '{order_id}', '{total}', '{support_phone}'),
+            array($name, $order->get_id(), $total, $support_phone),
+            $template
         );
 
         $result = self::send_sms($phone, $message);
