@@ -116,7 +116,7 @@ class TOT_Frontend {
     public static function variant_select_label() {
         global $product;
         if ($product && $product->is_type('variable')) {
-            echo '<p style="margin:0 0 5px;font-size:14px;font-weight:600;color:#555;">' . esc_html__('Select the variant', 'deshi-ecom') . '</p>';
+            echo '<p class="tot-variant-label" style="font-size:14px;font-weight:600;color:#555;">' . esc_html__('Select the variant:', 'deshi-ecom') . '</p>';
         }
     }
 

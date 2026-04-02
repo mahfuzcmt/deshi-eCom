@@ -198,6 +198,21 @@
 }
 
 /* ============================
+   VARIANT SELECT LABEL
+   ============================ */
+.single-product .variations_form > p.tot-variant-label {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 0 10px !important;
+    padding: 0 !important;
+}
+
+/* Hide the default attribute label since we have our own */
+.single-product .variations_form .variations th.label {
+    display: none;
+}
+
+/* ============================
    PRODUCT GRID - EQUAL HEIGHTS
    ============================ */
 .woocommerce ul.products {
