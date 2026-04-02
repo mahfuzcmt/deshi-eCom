@@ -94,7 +94,8 @@ class TOT_Invoice {
         $address       = $order->get_billing_address_1();
         $city          = $order->get_billing_city();
         $delivery_area = $order->get_meta('delivery_area');
-        $area_label    = $delivery_area === 'inside' ? 'Inside Dhaka' : ($delivery_area === 'outside' ? 'Outside Dhaka' : '');
+        $area_labels   = array('inside' => 'Inside Dhaka', 'suburban' => 'Dhaka Suburban', 'outside' => 'Outside Dhaka');
+        $area_label    = isset($area_labels[$delivery_area]) ? $area_labels[$delivery_area] : '';
         $payment        = $order->get_payment_method_title();
         $payment_method = $order->get_payment_method();
         $transaction_id = $order->get_transaction_id();

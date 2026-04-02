@@ -30,6 +30,11 @@ class TOT_Admin_Settings {
         // Delivery
         register_setting('tot_settings', 'tot_inside_dhaka_fee', array('type' => 'number', 'sanitize_callback' => 'absint'));
         register_setting('tot_settings', 'tot_outside_dhaka_fee', array('type' => 'number', 'sanitize_callback' => 'absint'));
+        register_setting('tot_settings', 'tot_dhaka_suburban_fee', array('type' => 'number', 'sanitize_callback' => 'absint'));
+        register_setting('tot_settings', 'tot_dhaka_suburban_thanas', array(
+            'type' => 'array',
+            'sanitize_callback' => array(__CLASS__, 'sanitize_suburban_thanas'),
+        ));
 
         // SMS (Falcon Communication Ltd)
         register_setting('tot_settings', 'tot_sms_bearer_token', array('type' => 'string', 'sanitize_callback' => 'sanitize_text_field'));
@@ -90,6 +95,34 @@ class TOT_Admin_Settings {
                         <tr>
                             <th>Outside Dhaka Fee (&#2547;)</th>
                             <td><input type="number" name="tot_outside_dhaka_fee" value="<?php echo esc_attr(get_option('tot_outside_dhaka_fee', 150)); ?>" min="0" /></td>
+                        </tr>
+                        <tr>
+                            <th>Dhaka Suburban Fee (&#2547;)</th>
+                            <td>
+                                <input type="number" name="tot_dhaka_suburban_fee" value="<?php echo esc_attr(get_option('tot_dhaka_suburban_fee', 150)); ?>" min="0" />
+                                <p class="description">Delivery fee for excluded Dhaka thanas listed below.</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Dhaka Suburban Thanas</th>
+                            <td>
+                                <?php
+                                    require_once TOT_PLUGIN_DIR . 'includes/data-bangladesh.php';
+                                    $bd_data = tot_get_bangladesh_data();
+                                    $dhaka_thanas = isset($bd_data['dhaka']['thanas']) ? $bd_data['dhaka']['thanas'] : array();
+                                    asort($dhaka_thanas);
+                                    $selected = get_option('tot_dhaka_suburban_thanas', array('savar', 'keraniganj', 'dohar', 'nawabganj_dhk'));
+                                    if (!is_array($selected)) {
+                                        $selected = array_filter(array_map('trim', explode("\n", $selected)));
+                                    }
+                                ?>
+                                <select name="tot_dhaka_suburban_thanas[]" multiple="multiple" style="min-width:350px;min-height:200px;">
+                                    <?php foreach ($dhaka_thanas as $slug => $label) : ?>
+                                        <option value="<?php echo esc_attr($slug); ?>" <?php echo in_array($slug, $selected) ? 'selected' : ''; ?>><?php echo esc_html($label); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <p class="description">Hold <strong>Ctrl</strong> (or <strong>Cmd</strong> on Mac) to select multiple thanas. These Dhaka thanas will be charged the suburban fee.</p>
+                            </td>
                         </tr>
                         <tr>
                             <th>Support Phone</th>
@@ -238,5 +271,15 @@ class TOT_Admin_Settings {
         }
         </script>
         <?php
+    }
+
+    /**
+     * Sanitize suburban thanas array.
+     */
+    public static function sanitize_suburban_thanas($input) {
+        if (!is_array($input)) {
+            return array();
+        }
+        return array_map('sanitize_text_field', $input);
     }
 }

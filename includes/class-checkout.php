@@ -109,7 +109,7 @@ class TOT_Checkout {
         $fields['billing']['billing_thana'] = array(
             'type'     => 'select',
             'label'    => __('Area / Thana', 'deshi-ecom'),
-            'required' => false,
+            'required' => true,
             'class'    => array('form-row-last', 'tot-thana-field'),
             'priority' => 40,
             'options'  => array('' => __('Select District first', 'deshi-ecom')),
@@ -171,10 +171,21 @@ class TOT_Checkout {
 
         $delivery_area = '';
 
-        // Auto-detect from district
+        // Auto-detect from district + thana
         if (isset($output['billing_district'])) {
             $district = sanitize_text_field($output['billing_district']);
-            $delivery_area = ($district === 'dhaka') ? 'inside' : 'outside';
+            $thana = isset($output['billing_thana']) ? sanitize_text_field($output['billing_thana']) : '';
+            if ($district === 'dhaka') {
+                if (empty($thana)) {
+                    // Wait for thana selection before setting delivery area
+                    $delivery_area = '';
+                } else {
+                    $suburban_thanas = self::get_suburban_thanas();
+                    $delivery_area = in_array($thana, $suburban_thanas, true) ? 'suburban' : 'inside';
+                }
+            } else {
+                $delivery_area = 'outside';
+            }
         }
 
         // Also accept explicit hidden field
@@ -188,6 +199,18 @@ class TOT_Checkout {
     }
 
     /**
+     * Get list of suburban Dhaka thana slugs from settings.
+     */
+    public static function get_suburban_thanas() {
+        $saved = get_option('tot_dhaka_suburban_thanas', array('savar', 'keraniganj', 'dohar', 'nawabganj_dhk'));
+        if (is_array($saved)) {
+            return array_filter($saved);
+        }
+        // Backwards compat: old textarea format
+        return array_filter(array_map('trim', explode("\n", $saved)));
+    }
+
+    /**
      * Save delivery area to order meta.
      */
     public static function save_delivery_area_to_order($order, $data) {
@@ -196,7 +219,13 @@ class TOT_Checkout {
 
         if (!$delivery_area && isset($_POST['billing_district'])) {
             $district = sanitize_text_field($_POST['billing_district']);
-            $delivery_area = ($district === 'dhaka') ? 'inside' : 'outside';
+            if ($district === 'dhaka') {
+                $thana = isset($_POST['billing_thana']) ? sanitize_text_field($_POST['billing_thana']) : '';
+                $suburban_thanas = self::get_suburban_thanas();
+                $delivery_area = ($thana && in_array($thana, $suburban_thanas, true)) ? 'suburban' : 'inside';
+            } else {
+                $delivery_area = 'outside';
+            }
         }
 
         if ($delivery_area) {
@@ -223,6 +252,9 @@ class TOT_Checkout {
         if (empty($_POST['billing_district'])) {
             wc_add_notice(__('Please select a District.', 'deshi-ecom'), 'error');
         }
+        if (empty($_POST['billing_thana'])) {
+            wc_add_notice(__('Please select an Area / Thana.', 'deshi-ecom'), 'error');
+        }
     }
 
     /**
@@ -231,8 +263,20 @@ class TOT_Checkout {
     public static function display_delivery_area_admin($order) {
         $area = $order->get_meta('delivery_area');
         if ($area) {
-            $label = $area === 'inside' ? __('Inside Dhaka', 'deshi-ecom') : __('Outside Dhaka', 'deshi-ecom');
+            $label = self::get_area_label($area);
             echo '<p><strong>' . esc_html__('Delivery Area:', 'deshi-ecom') . '</strong> ' . esc_html($label) . '</p>';
+        }
+    }
+
+    /**
+     * Get human-readable label for delivery area.
+     */
+    public static function get_area_label($area) {
+        switch ($area) {
+            case 'inside':   return __('Inside Dhaka', 'deshi-ecom');
+            case 'suburban':  return __('Dhaka Suburban', 'deshi-ecom');
+            case 'outside':   return __('Outside Dhaka', 'deshi-ecom');
+            default:          return ucfirst($area);
         }
     }
 
@@ -242,7 +286,7 @@ class TOT_Checkout {
     public static function display_delivery_area_email($order, $sent_to_admin, $plain_text, $email) {
         $area = $order->get_meta('delivery_area');
         if ($area) {
-            $label = $area === 'inside' ? __('Inside Dhaka', 'deshi-ecom') : __('Outside Dhaka', 'deshi-ecom');
+            $label = self::get_area_label($area);
             if ($plain_text) {
                 echo "\nDelivery Area: " . $label . "\n";
             } else {
@@ -277,8 +321,9 @@ class TOT_Checkout {
      * Show delivery info (read-only) before payment section.
      */
     public static function delivery_info_display() {
-        $inside_fee  = (int) get_option('tot_inside_dhaka_fee', 80);
-        $outside_fee = (int) get_option('tot_outside_dhaka_fee', 150);
+        $inside_fee   = (int) get_option('tot_inside_dhaka_fee', 80);
+        $outside_fee  = (int) get_option('tot_outside_dhaka_fee', 150);
+        $suburban_fee  = (int) get_option('tot_dhaka_suburban_fee', 150);
         $delivery_area = WC()->session->get('delivery_area');
         ?>
         <div class="tot-delivery-info" id="tot-delivery-info">
@@ -288,15 +333,34 @@ class TOT_Checkout {
                     <span class="tot-delivery-fee">৳<?php echo esc_html($inside_fee); ?></span>
                 </div>
                 <p class="tot-delivery-time"><?php esc_html_e('Estimated delivery: 2-3 business days', 'deshi-ecom'); ?></p>
+            <?php elseif ($delivery_area === 'suburban') : ?>
+                <div class="tot-delivery-badge tot-delivery-outside">
+                    <span class="tot-delivery-label"><?php esc_html_e('Delivery Dhaka Suburban', 'deshi-ecom'); ?></span>
+                    <span class="tot-delivery-fee">৳<?php echo esc_html($suburban_fee); ?></span>
+                </div>
+                <p class="tot-delivery-time"><?php esc_html_e('Estimated delivery: 3-5 business days', 'deshi-ecom'); ?></p>
             <?php elseif ($delivery_area === 'outside') : ?>
                 <div class="tot-delivery-badge tot-delivery-outside">
                     <span class="tot-delivery-label"><?php esc_html_e('Delivery Outside Dhaka', 'deshi-ecom'); ?></span>
                     <span class="tot-delivery-fee">৳<?php echo esc_html($outside_fee); ?></span>
                 </div>
                 <p class="tot-delivery-time"><?php esc_html_e('Estimated delivery: 3-5 business days', 'deshi-ecom'); ?></p>
-            <?php else : ?>
+            <?php else :
+                // Check if Dhaka is selected but thana not yet chosen
+                $selected_district = '';
+                $posted = WC()->checkout()->get_value('billing_district');
+                if ($posted) {
+                    $selected_district = $posted;
+                } elseif (isset($_POST['post_data'])) {
+                    parse_str($_POST['post_data'], $post_data);
+                    $selected_district = isset($post_data['billing_district']) ? $post_data['billing_district'] : '';
+                }
+                $pending_msg = ($selected_district === 'dhaka')
+                    ? __('Select an Area / Thana to see delivery charge', 'deshi-ecom')
+                    : __('Select a district to see delivery charge', 'deshi-ecom');
+            ?>
                 <div class="tot-delivery-badge tot-delivery-pending">
-                    <span class="tot-delivery-label"><?php esc_html_e('Select a district to see delivery charge', 'deshi-ecom'); ?></span>
+                    <span class="tot-delivery-label"><?php echo esc_html($pending_msg); ?></span>
                 </div>
             <?php endif; ?>
         </div>
@@ -321,13 +385,17 @@ class TOT_Checkout {
             return;
         }
 
-        $inside_fee  = (int) get_option('tot_inside_dhaka_fee', 80);
-        $outside_fee = (int) get_option('tot_outside_dhaka_fee', 150);
+        $inside_fee   = (int) get_option('tot_inside_dhaka_fee', 80);
+        $outside_fee  = (int) get_option('tot_outside_dhaka_fee', 150);
+        $suburban_fee  = (int) get_option('tot_dhaka_suburban_fee', 150);
+        $suburban_thanas = self::get_suburban_thanas();
         ?>
         <script>
         jQuery(function($){
             var insideFee = <?php echo $inside_fee; ?>;
             var outsideFee = <?php echo $outside_fee; ?>;
+            var suburbanFee = <?php echo $suburban_fee; ?>;
+            var suburbanThanas = <?php echo wp_json_encode(array_values($suburban_thanas)); ?>;
 
             // Fix: Destroy NiceSelect on our custom fields (Organio theme applies it to all selects)
             function totFixSelects() {
@@ -371,6 +439,14 @@ class TOT_Checkout {
                         '</div>' +
                         '<p class="tot-delivery-time"><?php echo esc_js(__('Estimated delivery: 2-3 business days', 'deshi-ecom')); ?></p>'
                     );
+                } else if (area === 'suburban') {
+                    $info.html(
+                        '<div class="tot-delivery-badge tot-delivery-outside">' +
+                            '<span class="tot-delivery-label"><?php echo esc_js(__('Delivery Dhaka Suburban', 'deshi-ecom')); ?></span>' +
+                            '<span class="tot-delivery-fee">৳' + suburbanFee + '</span>' +
+                        '</div>' +
+                        '<p class="tot-delivery-time"><?php echo esc_js(__('Estimated delivery: 3-5 business days', 'deshi-ecom')); ?></p>'
+                    );
                 } else if (area === 'outside') {
                     $info.html(
                         '<div class="tot-delivery-badge tot-delivery-outside">' +
@@ -380,12 +456,23 @@ class TOT_Checkout {
                         '<p class="tot-delivery-time"><?php echo esc_js(__('Estimated delivery: 3-5 business days', 'deshi-ecom')); ?></p>'
                     );
                 } else {
+                    var district = $('#billing_district, select[name="billing_district"]').val();
+                    var msg = district === 'dhaka'
+                        ? '<?php echo esc_js(__('Select an Area / Thana to see delivery charge', 'deshi-ecom')); ?>'
+                        : '<?php echo esc_js(__('Select a district to see delivery charge', 'deshi-ecom')); ?>';
                     $info.html(
                         '<div class="tot-delivery-badge tot-delivery-pending">' +
-                            '<span class="tot-delivery-label"><?php echo esc_js(__('Select a district to see delivery charge', 'deshi-ecom')); ?></span>' +
+                            '<span class="tot-delivery-label">' + msg + '</span>' +
                         '</div>'
                     );
                 }
+            }
+
+            // Determine delivery area based on district + thana
+            function totGetDeliveryArea(district, thana) {
+                if (district !== 'dhaka') return 'outside';
+                if (thana && suburbanThanas.indexOf(thana) !== -1) return 'suburban';
+                return 'inside';
             }
 
             // Load thanas for a given district
@@ -400,10 +487,15 @@ class TOT_Checkout {
                     return;
                 }
 
-                // Set delivery area: Dhaka = inside, others = outside
-                var area = (district === 'dhaka') ? 'inside' : 'outside';
-                $deliveryHidden.val(area);
-                totUpdateDeliveryBadge(area);
+                // For Dhaka, wait for thana selection; for others, set immediately
+                if (district === 'dhaka' && !selectedThana) {
+                    $deliveryHidden.val('');
+                    totUpdateDeliveryBadge('');
+                } else {
+                    var area = totGetDeliveryArea(district, selectedThana);
+                    $deliveryHidden.val(area);
+                    totUpdateDeliveryBadge(area);
+                }
 
                 // Load thanas via AJAX
                 $thanaSelect.html('<option value=""><?php echo esc_js(__('Loading...', 'deshi-ecom')); ?></option>');
@@ -437,6 +529,18 @@ class TOT_Checkout {
             $('form.checkout').on('change', '#billing_district, select[name="billing_district"]', function(){
                 totLoadThanas($(this).val(), '');
                 $('body').trigger('update_checkout');
+            });
+
+            // Thana change → update delivery area for Dhaka suburban
+            $('form.checkout').on('change', '#billing_thana, select[name="billing_thana"]', function(){
+                var district = $('#billing_district, select[name="billing_district"]').val();
+                if (district === 'dhaka') {
+                    var thana = $(this).val();
+                    var area = totGetDeliveryArea(district, thana);
+                    $('input[name="delivery_area"]').val(area);
+                    totUpdateDeliveryBadge(area);
+                    $('body').trigger('update_checkout');
+                }
             });
 
             // On page load: if district is pre-selected, load its thanas

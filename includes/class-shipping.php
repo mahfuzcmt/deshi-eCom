@@ -34,11 +34,14 @@ class TOT_Shipping {
             return;
         }
 
-        $inside_fee  = (int) get_option('tot_inside_dhaka_fee', 80);
-        $outside_fee = (int) get_option('tot_outside_dhaka_fee', 150);
+        $inside_fee   = (int) get_option('tot_inside_dhaka_fee', 80);
+        $outside_fee  = (int) get_option('tot_outside_dhaka_fee', 150);
+        $suburban_fee  = (int) get_option('tot_dhaka_suburban_fee', 150);
 
         if ($delivery_area === 'inside') {
             $cart->add_fee(__('Delivery Charge', 'deshi-ecom'), $inside_fee, true, '');
+        } elseif ($delivery_area === 'suburban') {
+            $cart->add_fee(__('Delivery Charge', 'deshi-ecom'), $suburban_fee, true, '');
         } elseif ($delivery_area === 'outside') {
             $cart->add_fee(__('Delivery Charge', 'deshi-ecom'), $outside_fee, true, '');
         }
