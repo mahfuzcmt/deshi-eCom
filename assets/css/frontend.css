@@ -1,0 +1,441 @@
+/**
+ * Deshi eCom - Frontend Styles
+ *
+ * @package DeshiEcom
+ */
+
+/* ============================
+   DELIVERY AREA (AUTO FROM DISTRICT)
+   ============================ */
+/* Hide the hidden delivery_area field wrapper */
+.tot-delivery-area-hidden {
+    display: none !important;
+}
+
+/* Hide the hidden country field wrapper */
+.tot-hidden-country {
+    display: none !important;
+}
+
+/* Delivery info badge (read-only, shown before payment) */
+.tot-delivery-info {
+    margin: 15px 0;
+}
+
+.tot-delivery-badge {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.tot-delivery-badge.tot-delivery-inside {
+    background: #e8f5e9;
+    border: 2px solid #3bb77e;
+    color: #2e7d32;
+}
+
+.tot-delivery-badge.tot-delivery-outside {
+    background: #e0f7fa;
+    border: 2px solid #00acc1;
+    color: #00695c;
+}
+
+.tot-delivery-badge.tot-delivery-pending {
+    background: #f5f5f5;
+    border: 2px dashed #ccc;
+    color: #999;
+    justify-content: center;
+}
+
+.tot-delivery-fee {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.tot-delivery-time {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: #777;
+}
+
+/* District & Thana select styling */
+.tot-district-field select,
+.tot-thana-field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    background: #fff;
+    appearance: auto;
+}
+
+/* ============================
+   CART PAGE - HIDE EXTRAS
+   ============================ */
+/* Hide default WC coupon form at bottom of cart table (keep in DOM for JS proxy) */
+.woocommerce-cart table.cart td.actions .coupon,
+.woocommerce-cart .cart-collaterals .coupon,
+.woocommerce-cart table.cart .coupon {
+    position: absolute !important;
+    left: -9999px !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Hide product list, cross-sells, and related products on cart page */
+.woocommerce-cart .woocommerce-topbar,
+.woocommerce-cart .products.columns-2,
+.woocommerce-cart .products.columns-3,
+.woocommerce-cart .products.columns-4,
+.woocommerce-cart .cross-sells,
+.woocommerce-cart .related.products,
+.woocommerce-cart .up-sells,
+.woocommerce-cart .cart-collaterals .cross-sells {
+    display: none !important;
+}
+
+/* Remove sidebar on cart/checkout */
+.tot-no-sidebar #secondary,
+.tot-no-sidebar .sidebar-shop,
+.tot-no-sidebar aside.sidebar,
+.woocommerce-cart .sidebar,
+.woocommerce-checkout .sidebar {
+    display: none !important;
+}
+
+.tot-no-sidebar .content-area,
+.tot-no-sidebar #primary {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+}
+
+/* ============================
+   COUPON FIELD STYLING
+   ============================ */
+/* Equal width coupon input and button */
+.woocommerce-cart .coupon .input-text,
+.woocommerce-cart .coupon input[name="coupon_code"] {
+    width: 50% !important;
+    min-width: 200px;
+    padding: 10px 15px;
+    font-size: 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.woocommerce-cart .coupon .button,
+.woocommerce-cart .coupon button[name="apply_coupon"] {
+    width: auto;
+    min-width: 200px;
+    padding: 10px 25px;
+    font-size: 15px;
+    border-radius: 8px;
+}
+
+/* Click-to-reveal coupon */
+.tot-coupon-toggle {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border: 1px dashed #ddd;
+}
+
+.tot-coupon-link {
+    color: #3bb77e;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.tot-coupon-link:hover {
+    color: #2a9d6a;
+    text-decoration: underline;
+}
+
+.tot-coupon-form {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.tot-coupon-form input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.tot-coupon-form input:focus {
+    border-color: #3bb77e;
+    outline: none;
+}
+
+.tot-coupon-form .tot-apply-coupon {
+    background: #3bb77e;
+    color: #fff;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+}
+
+.tot-coupon-form .tot-apply-coupon:hover {
+    background: #2a9d6a;
+}
+
+/* ============================
+   VARIANT SELECT LABEL
+   ============================ */
+.single-product .variations_form > p.tot-variant-label {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 0 10px !important;
+    padding: 0 !important;
+}
+
+/* Hide the default attribute label since we have our own */
+.single-product .variations_form .variations th.label {
+    display: none;
+}
+
+/* ============================
+   PRODUCT GRID - EQUAL HEIGHTS
+   ============================ */
+.woocommerce ul.products {
+    display: flex !important;
+    flex-wrap: wrap;
+}
+
+.woocommerce ul.products li.product {
+    display: flex;
+    flex-direction: column;
+}
+
+.woocommerce ul.products li.product .product-block {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.woocommerce ul.products li.product .product-block-inner,
+.woocommerce ul.products li.product .product-block .block-inner {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.woocommerce ul.products li.product img,
+.woocommerce ul.products li.product .attachment-woocommerce_thumbnail {
+    height: 280px;
+    object-fit: contain;
+    width: 100%;
+}
+
+.woocommerce ul.products li.product .product-content,
+.woocommerce ul.products li.product .product-caption {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* ============================
+   WHATSAPP FLOATING BUTTON
+   ============================ */
+.tot-whatsapp-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: #25D366;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+    z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+.tot-whatsapp-btn:hover {
+    background: #1ebe5c;
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+    color: #fff;
+    text-decoration: none;
+}
+
+.tot-whatsapp-btn svg {
+    flex-shrink: 0;
+}
+
+/* Mobile: icon only */
+@media (max-width: 576px) {
+    .tot-whatsapp-btn span {
+        display: none;
+    }
+    .tot-whatsapp-btn {
+        padding: 14px;
+        border-radius: 50%;
+    }
+}
+
+/* ============================
+   SEARCH BAR VISIBILITY
+   ============================ */
+.header-search input[type="search"],
+.search-field,
+input[name="s"] {
+    border: 2px solid #ddd !important;
+    border-radius: 8px !important;
+    padding: 10px 15px !important;
+    font-size: 15px !important;
+    transition: border-color 0.3s ease;
+}
+
+.header-search input[type="search"]:focus,
+.search-field:focus,
+input[name="s"]:focus {
+    border-color: #3bb77e !important;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 183, 126, 0.15);
+}
+
+/* ============================
+   ACCOUNT NAME IN HEADER
+   ============================ */
+.h-btn-user .tot-account-name,
+.h-btn-icon-user .tot-account-name {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 13px;
+    color: #333;
+    white-space: nowrap;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
+/* Mobile: hide name, keep icon */
+@media (max-width: 767px) {
+    .h-btn-user .tot-account-name,
+    .h-btn-icon-user .tot-account-name {
+        display: none;
+    }
+}
+
+/* ============================
+   ONLINE PAYMENT DISCOUNT BADGE
+   ============================ */
+.tot-discount-badge {
+    color: #e74c3c;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+/* (Delivery time estimate is now part of .tot-delivery-info badge) */
+
+/* ============================
+   INVOICE BUTTONS
+   ============================ */
+.tot-invoice-actions .button {
+    margin-right: 10px;
+    background: #3bb77e;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 20px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.tot-invoice-actions .button:hover {
+    background: #2a9d6a;
+    color: #fff;
+}
+
+.tot-invoice-actions .tot-invoice-download {
+    background: #555;
+}
+
+.tot-invoice-actions .tot-invoice-download:hover {
+    background: #333;
+}
+
+/* ============================
+   CHECKOUT LOGIN FORM ALIGNMENT
+   ============================ */
+.woocommerce-form-login {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 15px;
+}
+
+.woocommerce-form-login .form-row-first,
+.woocommerce-form-login .form-row-last {
+    flex: 1;
+    min-width: 45%;
+}
+
+.woocommerce-form-login .form-row-wide,
+.woocommerce-form-login p.form-row:not(.form-row-first):not(.form-row-last) {
+    flex: 0 0 100%;
+}
+
+/* ============================
+   CHECKOUT SIMPLIFICATION
+   ============================ */
+.woocommerce-checkout .woocommerce-billing-fields__field-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 15px;
+}
+
+.woocommerce-checkout .form-row-first,
+.woocommerce-checkout .form-row-last {
+    flex: 1;
+    min-width: 45%;
+}
+
+.woocommerce-checkout .form-row-wide {
+    flex: 0 0 100%;
+}
+
+/* ============================
+   LOGO SIZE REDUCTION
+   ============================ */
+.site-branding img,
+.header-logo img,
+.custom-logo {
+    max-height: 80px !important;
+    width: auto !important;
+}
+
+/* ============================
+   SEARCH ANIMATION CURSOR
+   ============================ */
+input[data-tot-animate="1"] {
+    caret-color: transparent;
+}
+
+input[data-tot-animate="1"]:focus {
+    caret-color: auto;
+}
