@@ -1,0 +1,345 @@
+@font-face {
+  font-family: "Flaticon";
+  src: url("../fonts/flaticon.eot");
+  src: url("../fonts/flaticon.eot?#iefix") format("embedded-opentype"),
+       url("../fonts/flaticon.woff2") format("woff2"),
+       url("../fonts/flaticon.woff") format("woff"),
+       url("../fonts/flaticon.ttf") format("truetype"),
+       url("../fonts/flaticon.svg#flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("../fonts/flaticon.svg#Flaticon") format("svg");
+  }
+}
+
+[class^="flaticon-"]:before, [class*=" flaticon-"]:before,
+[class^="flaticon-"]:after, [class*=" flaticon-"]:after {   
+  font-family: Flaticon;
+  font-size: inherit;
+  font-style: normal;
+  font-weight: normal;
+}
+
+.flaticon-next:before {
+    content: "\f101";
+}
+.flaticon-rate:before {
+    content: "\f102";
+}
+.flaticon-link:before {
+    content: "\f103";
+}
+.flaticon-product-design:before {
+    content: "\f104";
+}
+.flaticon-award:before {
+    content: "\f105";
+}
+.flaticon-love:before {
+    content: "\f106";
+}
+.flaticon-view:before {
+    content: "\f107";
+}
+.flaticon-random:before {
+    content: "\f108";
+}
+.flaticon-right-arrow:before {
+    content: "\f109";
+}
+.flaticon-right-arrows:before {
+    content: "\f10a";
+}
+.flaticon-right-arrow-1:before {
+    content: "\f10b";
+}
+.flaticon-map:before {
+    content: "\f10c";
+}
+.flaticon-phone-call:before {
+    content: "\f10d";
+}
+.flaticon-email:before {
+    content: "\f10e";
+}
+.flaticon-cardboard:before {
+    content: "\f10f";
+}
+.flaticon-carrot:before {
+    content: "\f110";
+}
+.flaticon-truck:before {
+    content: "\f111";
+}
+.flaticon-arrow:before {
+    content: "\f112";
+}
+.flaticon-return:before {
+    content: "\f113";
+}
+.flaticon-leaf:before {
+    content: "\f114";
+}
+.flaticon-headphones:before {
+    content: "\f115";
+}
+.flaticon-shield:before {
+    content: "\f116";
+}
+.flaticon-leaf-1:before {
+    content: "\f117";
+}
+.flaticon-crown:before {
+    content: "\f118";
+}
+.flaticon-shopping-cart:before {
+    content: "\f119";
+}
+.flaticon-menu:before {
+    content: "\f11a";
+}
+.flaticon-cherry:before {
+    content: "\f11b";
+}
+.flaticon-broccoli:before {
+    content: "\f11c";
+}
+.flaticon-fish:before {
+    content: "\f11d";
+}
+.flaticon-chicken-leg:before {
+    content: "\f11e";
+}
+.flaticon-orange-juice:before {
+    content: "\f11f";
+}
+.flaticon-ravioli:before {
+    content: "\f120";
+}
+.flaticon-dairy-products:before {
+    content: "\f121";
+}
+.flaticon-coconut:before {
+    content: "\f122";
+}
+.flaticon-grid:before {
+    content: "\f123";
+}
+.flaticon-bread:before {
+    content: "\f124";
+}
+.flaticon-delivery:before {
+    content: "\f125";
+}
+.flaticon-leaf-2:before {
+    content: "\f126";
+}
+.flaticon-money-back-guarantee:before {
+    content: "\f127";
+}
+.flaticon-shield-1:before {
+    content: "\f128";
+}
+.flaticon-cart:before {
+    content: "\f129";
+}
+.flaticon-contact:before {
+    content: "\f12a";
+}
+.flaticon-location-pin:before {
+    content: "\f12b";
+}
+.flaticon-check:before {
+    content: "\f12c";
+}
+.flaticon-search:before {
+    content: "\f12d";
+}
+.flaticon-cart-1:before {
+    content: "\f12e";
+}
+.flaticon-facebook:before {
+    content: "\f12f";
+}
+.flaticon-twitter:before {
+    content: "\f130";
+}
+.flaticon-instagram:before {
+    content: "\f131";
+}
+.flaticon-pinterest:before {
+    content: "\f132";
+}
+.flaticon-shape22x:before {
+    content: "\f133";
+}
+.flaticon-shape2-12x:before {
+    content: "\f134";
+}
+.flaticon-play:before {
+    content: "\f135";
+}
+.flaticon-compare:before {
+    content: "\f136";
+}
+.flaticon-show:before {
+    content: "\f137";
+}
+.flaticon-star:before {
+    content: "\f138";
+}
+.flaticon-cancel:before {
+    content: "\f139";
+}
+.flaticon-fruits:before {
+    content: "\f13a";
+}
+.flaticon-pay:before {
+    content: "\f13b";
+}
+.flaticon-lorry:before {
+    content: "\f13c";
+}
+.flaticon-checked:before {
+    content: "\f13d";
+}
+.flaticon-add-to-cart:before {
+    content: "\f13e";
+}
+.flaticon-grocery:before {
+    content: "\f13f";
+}
+.flaticon-share:before {
+    content: "\f140";
+}
+.flaticon-right-quotes-symbol:before {
+    content: "\f141";
+}
+.flaticon-bread-1:before {
+    content: "\f142";
+}
+.flaticon-shopping-cart-1:before {
+    content: "\f143";
+}
+.flaticon-oil:before {
+    content: "\f144";
+}
+.flaticon-milk-box:before {
+    content: "\f145";
+}
+.flaticon-chicken-leg-1:before {
+    content: "\f146";
+}
+.flaticon-eggs:before {
+    content: "\f147";
+}
+.flaticon-salad:before {
+    content: "\f148";
+}
+.flaticon-broccoli-1:before {
+    content: "\f149";
+}
+.flaticon-vegetable:before {
+    content: "\f14a";
+}
+.flaticon-wishlist:before {
+    content: "\f14b";
+}
+.flaticon-user:before {
+    content: "\f14c";
+}
+.flaticon-product:before {
+    content: "\f14d";
+}
+.flaticon-onion:before {
+    content: "\f14e";
+}
+.flaticon-brain:before {
+    content: "\f14f";
+}
+.flaticon-bulb:before {
+    content: "\f150";
+}
+.flaticon-quote:before {
+    content: "\f151";
+}
+.flaticon-review:before {
+    content: "\f152";
+}
+.flaticon-feedback:before {
+    content: "\f153";
+}
+.flaticon-direct:before {
+    content: "\f154";
+}
+.flaticon-maps:before {
+    content: "\f155";
+}
+.flaticon-phone-call-1:before {
+    content: "\f156";
+}
+.flaticon-email-1:before {
+    content: "\f157";
+}
+.flaticon-plus:before {
+    content: "\f158";
+}
+.flaticon-search-1:before {
+    content: "\f159";
+}
+.flaticon-right-arrow-2:before {
+    content: "\f15a";
+}
+.flaticon-vegetable-1:before {
+    content: "\f15b";
+}
+.flaticon-customer-support:before {
+    content: "\f15c";
+}
+.flaticon-chicken-leg-2:before {
+    content: "\f15d";
+}
+.flaticon-salad-1:before {
+    content: "\f15e";
+}
+.flaticon-broccoli-2:before {
+    content: "\f15f";
+}
+.flaticon-credit-card:before {
+    content: "\f160";
+}
+.flaticon-call-center:before {
+    content: "\f161";
+}
+.flaticon-money-back:before {
+    content: "\f162";
+}
+.flaticon-wide:before {
+    content: "\f163";
+}
+.flaticon-good-feedback:before {
+    content: "\f164";
+}
+.flaticon-coin:before {
+    content: "\f165";
+}
+.flaticon-receipt:before {
+    content: "\f166";
+}
+.flaticon-roasted:before {
+    content: "\f167";
+}
+.flaticon-green-tea:before {
+    content: "\f168";
+}
+.flaticon-experience:before {
+    content: "\f169";
+}
+.flaticon-gift-box:before {
+    content: "\f16a";
+}

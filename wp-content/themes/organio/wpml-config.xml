@@ -1,0 +1,36 @@
+<wpml-config>
+    <admin-texts>
+        <key name="ct_theme_options">
+            <key name="short_text" />
+            <key name="wellcome" />
+            <key name="h_phone" />
+            <key name="h_phone_link" />
+            <key name="h_phone_label" />
+            <key name="h_social_facebook_url" />
+            <key name="h_social_twitter_url" />
+            <key name="h_social_dribbble_url" />
+            <key name="h_social_behance_url" />
+            <key name="h_social_inkedin_url" />
+            <key name="h_social_instagram_url" />
+            <key name="h_social_skype_url" />
+            <key name="h_social_pinterest_url" />
+            <key name="h_social_vimeo_url" />
+            <key name="h_social_youtube_url" />
+            <key name="h_social_yelp_url" />
+            <key name="h_social_tumblr_url" />
+            <key name="h_social_tripadvisor_url" />
+            <key name="search_field_placeholder" />
+            <key name="archive_readmore_text" />
+            <key name="portfolio_slug" />
+            <key name="portfolio_name" />
+            <key name="portfolio_category_slug" />
+            <key name="portfolio_category_name" />
+            <key name="archive_portfolio_link" />
+            <key name="service_slug" />
+            <key name="service_name" />
+            <key name="service_category_slug" />
+            <key name="service_category_name" />
+            <key name="archive_service_link" />
+        </key>
+    </admin-texts>
+</wpml-config>

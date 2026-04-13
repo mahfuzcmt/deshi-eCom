@@ -1,0 +1,97 @@
+.ct-tabs--horizontal1 {
+    .ct-tab-content {
+        display: none;
+    }
+    .ct-tabs-content {
+        margin: 10px 0 0;
+        position: relative;
+    }
+    &.style1 {
+        .ct-tabs-title {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            .ct-tab-title {
+                line-height: 45px;
+                padding: 0 26px;
+                background-color: #f3f3f3;
+                font-size: 20px;
+                color: #071c1f;
+                font-weight: 600;
+                border-radius: 45px;
+                font-family: 'Lexend', sans-serif;
+                margin: 0 15px 15px 15px;
+                cursor: pointer;
+                @include transition(.3s cubic-bezier(.24,.74,.58,1));
+                &:hover, &.active {
+                    background-color: $primary_color;
+                    color: #fff;
+                }
+                @media #{$max-sm} {
+                    font-size: 16px;
+                    line-height: 41px;
+                    padding: 0 18px;
+                    margin: 0 5px 10px 5px;
+                }
+            }
+        }
+    }
+    &.style2 {
+        margin-top: -20px;
+        .ct-tabs-title {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            .ct-tab-title {
+                font-size: 18px;
+                font-weight: 700;
+                color: #000039;
+                font-family: 'Poppins', sans-serif;
+                background-color: transparent !important;
+                margin: 20px 15px 0px 15px;
+                cursor: pointer;
+                @include transition(.3s cubic-bezier(.24,.74,.58,1));
+                position: relative;
+                &:before {
+                    content: '';
+                    height: 1px;
+                    width: 0;
+                    @include transition(.3s cubic-bezier(.24,.74,.58,1));
+                    position: absolute;
+                    bottom: 1px;
+                    left: 0;
+                    background-color: $primary_color;
+                }
+                &.active, &:hover {
+                    color: $primary_color;
+                    &:before {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+}
+.ct-tab-fade .ct-tabs {
+    .ct-tab-content {
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+        &:not(.active) {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            opacity: 0;
+            visibility: hidden;
+            @include transition(.3s cubic-bezier(.24,.74,.58,1));
+        }
+        &.active {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+}

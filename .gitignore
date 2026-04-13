@@ -1,0 +1,76 @@
+# WordPress core (don't commit — manage via WP updates)
+/wp-admin/
+/wp-includes/
+/wp-*.php
+!/wp-config-sample.php
+/index.php
+/license.txt
+/readme.html
+/xmlrpc.php
+/default.php
+
+# Sensitive config
+wp-config.php
+.htaccess
+.user.ini
+/.private/
+*.bk
+*.bak
+
+# Uploads, cache, logs
+/wp-content/uploads/
+/wp-content/cache/
+/wp-content/upgrade/
+/wp-content/backup*/
+/wp-content/backups/
+/wp-content/wflogs/
+/wp-content/litespeed/
+/wp-content/et-cache/
+/wp-content/*.log
+/wp-content/debug.log
+/wp-content/tto-debug.log
+
+# Project diagnostic file (from Telegram debug)
+/wp-content/mu-plugins/tto-test.php
+
+# Third-party plugins and themes (manage via WP)
+/wp-content/plugins/*
+/wp-content/themes/*
+
+# ── Whitelist custom code ──
+!/wp-content/plugins/.gitkeep
+!/wp-content/themes/.gitkeep
+!/wp-content/mu-plugins/
+/wp-content/mu-plugins/hostinger-*.php
+!/wp-content/mu-plugins/tto-*.php
+
+# Custom plugin/theme for this project
+!/wp-content/plugins/deshi-ecom/
+!/wp-content/themes/organio/
+
+# OS / editor / local tooling
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+.idea/
+.vscode/
+.claude/
+*.sublime-*
+
+# Dependencies
+node_modules/
+vendor/
+*.lock
+
+# Archives / dumps
+*.zip
+*.tar.gz
+*.sql
+*.sql.gz
+
+# Env
+.env
+.env.*
+!.env.example
